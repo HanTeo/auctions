@@ -6,10 +6,13 @@ from auction import Auction
 def process(raw_events: List):
 
     auctions = {}
+    errors = []
 
     for r in raw_events:
         tokenize = r.split('|')
         event = infer_event(tokenize)
+        if event is None:
+            errors.append({'error': r})
 
         if isinstance(event, Listing):
             auction = Auction(
@@ -33,3 +36,6 @@ def process(raw_events: List):
 
     for auction in auctions.values():
         yield str(auction)
+
+    if any(errors):
+        yield errors

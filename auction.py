@@ -18,7 +18,6 @@ class Auction:
     min_bid_amount: float = None
 
     def isvalid(self, bid: Bid):
-        self.update_best_bid_amount()
         criteria = [
             bid.timestamp <= self.end_time,
             bid.bid_amount > self.best_bid_amount
@@ -36,6 +35,7 @@ class Auction:
 
         if self.isvalid(bid):
             self.bids.append(bid)
+            self.update_best_bid_amount()
 
         if bid.timestamp <= self.end_time:
             self.max_bid_amount = max(self.max_bid_amount, bid.bid_amount) if self.max_bid_amount else bid.bid_amount

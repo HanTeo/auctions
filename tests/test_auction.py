@@ -1,6 +1,4 @@
-import pytest
 from main import process
-import pytest
 
 
 def test_given_scenario():
@@ -55,11 +53,28 @@ def test_earlier_bid_wins():
     ]
 
 
-def test_heartbeat():
+def test_single_bid_pays_reserve():
     raw_events = [
-        '16'
+        '10|1|SELL|toaster_1|10.00|20',
+        '13|5|BID|toaster_1|12.50',
+        '22'
     ]
 
     results = process(raw_events)
 
-    assert not any(results)
+    assert list(results) == [
+        '20|toaster_1|5|SOLD|10.00|1|12.50|12.50',
+    ]
+
+
+def test_errors():
+    raw_events = [
+        'gasdfs',
+        '20'
+    ]
+
+    results = process(raw_events)
+
+    assert list(results) == [
+        [{'error': 'gasdfs'}]
+    ]
