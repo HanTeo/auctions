@@ -1,6 +1,6 @@
 from typing import List
-from events import HeartBeat, Bid, Listing, infer_event
-from auction import Auction
+from src.events import HeartBeat, Bid, Listing, infer_event
+from src.auction import Auction
 
 
 def process(raw_events: List):
