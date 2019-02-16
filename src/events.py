@@ -8,7 +8,9 @@ class Event(ABC):
     timestamp: int
 
     @staticmethod
-    def infer_event(cols: List) -> 'Event':
+    def decode(raw_event: str) -> 'Event':
+        cols = raw_event.split('|')
+
         heartbeat = HeartBeat.parse(cols)
         if heartbeat is not None:
             return HeartBeat(timestamp=int(cols[0]))

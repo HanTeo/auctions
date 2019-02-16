@@ -10,12 +10,12 @@ def process(raw_events: List) -> Generator:
     auctions = {}
     errors = []
 
-    for r in raw_events:
-        tokenize = r.split('|')
-        event = Event.infer_event(tokenize)
+    for raw_event in raw_events:
+
+        event = Event.decode(raw_event)
 
         if event is None:
-            errors.append({'error': r})
+            errors.append({'error': raw_event})
 
         if isinstance(event, Listing):
             auction = Auction(
@@ -27,11 +27,13 @@ def process(raw_events: List) -> Generator:
             auctions[event.item] = auction
             continue
 
+        # Route bid to correct auction
         if isinstance(event, Bid):
             if event.item in auctions:
                 auctions[event.item].bid(event)
                 continue
 
+        # Broadcast HeartBeat to all auctions
         if isinstance(event, HeartBeat):
             for _, auction in auctions.items():
                 auction.update(event)

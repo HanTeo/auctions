@@ -10,8 +10,8 @@ def test_str_float():
 
 
 def test_infer_bids():
-    cols = '13|5|BID|toaster_1|12.50'.split('|')
-    event = Event.infer_event(cols)
+    raw_event = '13|5|BID|toaster_1|12.50'
+    event = Event.decode(raw_event)
     assert isinstance(event, Bid)
     assert event.timestamp == 13
     assert event.user_id == '5'
@@ -20,8 +20,8 @@ def test_infer_bids():
 
 
 def test_infer_listing():
-    cols = '10|1|SELL|toaster_1|10.00|20'.split('|')
-    event = Event.infer_event(cols)
+    raw_event = '10|1|SELL|toaster_1|10.00|20'
+    event = Event.decode(raw_event)
     assert isinstance(event, Listing)
     assert event.timestamp == 10
     assert event.user_id == '1'
@@ -31,13 +31,13 @@ def test_infer_listing():
 
 
 def test_infer_heartbeat():
-    cols = '10'.split('|')
-    event = Event.infer_event(cols)
+    raw_event = '10'
+    event = Event.decode(raw_event)
     assert isinstance(event, HeartBeat)
     assert event.timestamp == 10
 
 
 def test_garbage_does_not_create_event():
-    cols = 'adsfasdf'.split('|')
-    event = Event.infer_event(cols)
+    raw_event = 'adsfasdf'
+    event = Event.decode(raw_event)
     assert event is None

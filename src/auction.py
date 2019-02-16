@@ -20,7 +20,7 @@ class Auction:
 
     def isvalid(self, bid: Bid) -> bool:
         criteria = [
-            bid.timestamp <= self.end_time,
+            bid.item == self.item,
             bid.bid_amount > self.best_bid_amount
         ]
         return all(criteria)
@@ -32,19 +32,18 @@ class Auction:
 
     def bid(self, bid: Bid):
         if bid.timestamp > self.end_time:
-            pass
+            return
 
         if self.isvalid(bid):
             self.bids.append(bid)
             self.update_best_bid_amount()
 
-        if bid.timestamp <= self.end_time:
-            self.max_bid_amount = max(self.max_bid_amount, bid.bid_amount) if self.max_bid_amount else bid.bid_amount
-            self.min_bid_amount = min(self.min_bid_amount, bid.bid_amount) if self.min_bid_amount else bid.bid_amount
+        self.max_bid_amount = max(self.max_bid_amount, bid.bid_amount) if self.max_bid_amount else bid.bid_amount
+        self.min_bid_amount = min(self.min_bid_amount, bid.bid_amount) if self.min_bid_amount else bid.bid_amount
 
     def update(self, heartbeat: HeartBeat):
         if heartbeat.timestamp < self.end_time:
-            pass
+            return
 
         # SOLD condition
         if self.best_bid_amount >= self.reserve_price:

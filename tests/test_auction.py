@@ -1,5 +1,4 @@
 from main import process, main
-
 from tests import get_stdout
 
 
@@ -51,7 +50,7 @@ def test_no_bids():
     raw_events = [
         '10|1|SELL|toaster_1|10.00|20',
         '15|8|SELL|tv_1|250.00|20',
-        '16'
+        '20'
     ]
 
     results = process(raw_events)
@@ -67,7 +66,7 @@ def test_earlier_bid_wins():
         '10|1|SELL|toaster_1|10.00|20',
         '13|5|BID|toaster_1|12.50',
         '14|6|BID|toaster_1|12.50',
-        '16'
+        '20'
     ]
 
     results = process(raw_events)
