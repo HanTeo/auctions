@@ -1,4 +1,6 @@
-from main import process
+from main import process, main
+
+from tests import get_stdout
 
 
 def test_given_scenario():
@@ -18,6 +20,17 @@ def test_given_scenario():
     results = process(raw_events)
 
     assert list(results) == [
+        '20|toaster_1|8|SOLD|12.50|3|20.00|7.50',
+        '20|tv_1||UNSOLD|0.00|2|200.00|150.00'
+    ]
+
+
+def test_given_from_file(capsys):
+    main('input.txt')
+
+    out, err = get_stdout(capsys)
+
+    assert out == [
         '20|toaster_1|8|SOLD|12.50|3|20.00|7.50',
         '20|tv_1||UNSOLD|0.00|2|200.00|150.00'
     ]
