@@ -8,7 +8,7 @@ class Event(ABC):
     timestamp: int
 
     @staticmethod
-    def infer_event(cols):
+    def infer_event(cols: List) -> 'Event':
         heartbeat = HeartBeat.parse(cols)
         if heartbeat is not None:
             return HeartBeat(timestamp=int(cols[0]))
@@ -32,7 +32,7 @@ class Event(ABC):
         """class method to parse a list in an event type"""
 
     @classmethod
-    def isfloat(cls, text):
+    def isfloat(cls, text: str) -> bool:
         try:
             float(text)
             return True
@@ -53,7 +53,7 @@ class HeartBeat(Event):
         return all(criteria)
 
     @classmethod
-    def parse(cls, tokens):
+    def parse(cls, tokens: List) -> 'HeartBeat':
         if cls._can_parse(tokens):
             return cls(timestamp=tokens[0])
 
@@ -65,7 +65,7 @@ class Bid(Event):
     bid_amount: float
 
     @classmethod
-    def _can_parse(cls, cols):
+    def _can_parse(cls, cols: List) -> bool:
         if len(cols) != 5:
             return False
         timestamp, user_id, action, item, bid_amount = 0, 1, 2, 3, 4
@@ -79,7 +79,7 @@ class Bid(Event):
         return all(criteria)
 
     @classmethod
-    def parse(cls, tokens):
+    def parse(cls, tokens) -> 'Bid':
         if cls._can_parse(tokens):
             timestamp, user_id, action, item, bid_amount = 0, 1, 2, 3, 4
             return cls(
@@ -98,7 +98,7 @@ class Listing(Event):
     end_time: int
 
     @classmethod
-    def _can_parse(cls, cols):
+    def _can_parse(cls, cols: List) -> bool:
         if len(cols) != 6:
             return False
         timestamp, user_id, action, item, reserve_price, end_time = 0, 1, 2, 3, 4, 5
@@ -113,7 +113,7 @@ class Listing(Event):
         return all(criteria)
 
     @classmethod
-    def parse(cls, cols):
+    def parse(cls, cols: List) -> 'Listing':
         if cls._can_parse(cols):
             timestamp, user_id, action, item, reserve_price, end_time = 0, 1, 2, 3, 4, 5
             return cls(
