@@ -55,6 +55,10 @@ class Auction:
             # otherwise price paid is the next highest bid price
             self.price_paid = self.reserve_price if len(nlargest) < 2 else nlargest[1].bid_amount
 
+        if not any(self.bids):
+            self.min_bid_amount = 0.0
+            self.max_bid_amount = 0.0
+
     def __str__(self):
         return f'{self.end_time}|' \
               f'{self.item}|' \

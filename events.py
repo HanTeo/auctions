@@ -98,7 +98,8 @@ class Listing:
 
 
 def infer_event(tokens):
-    if len(tokens) == 1 and tokens[0].isdigit():
+    heartbeat = HeartBeat.parse(tokens)
+    if heartbeat is not None:
         return HeartBeat(timestamp=int(tokens[0]))
 
     listing = Listing.parse(tokens)
