@@ -1,16 +1,16 @@
-from typing import List
-from src.events import HeartBeat, Bid, Listing, infer_event
+from typing import List, Generator
+from src.events import HeartBeat, Bid, Listing, Event
 from src.auction import Auction
 
 
-def process(raw_events: List):
+def process(raw_events: List) -> Generator:
 
     auctions = {}
     errors = []
 
     for r in raw_events:
         tokenize = r.split('|')
-        event = infer_event(tokenize)
+        event = Event.infer_event(tokenize)
 
         if event is None:
             errors.append({'error': r})

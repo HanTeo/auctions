@@ -1,20 +1,50 @@
 from dataclasses import dataclass
-
-
-def isfloat(text):
-    try:
-        float(text)
-        return True
-    except ValueError:
-        return False
+from typing import List
+from abc import abstractmethod, ABC
 
 
 @dataclass
-class HeartBeat:
+class Event(ABC):
     timestamp: int
 
+    @staticmethod
+    def infer_event(cols):
+        heartbeat = HeartBeat.parse(cols)
+        if heartbeat is not None:
+            return HeartBeat(timestamp=int(cols[0]))
+
+        listing = Listing.parse(cols)
+        if listing is not None:
+            return listing
+
+        bid = Bid.parse(cols)
+        if bid is not None:
+            return bid
+
     @classmethod
-    def _can_parse(cls, cols):
+    @abstractmethod
+    def _can_parse(cls, cols: List) -> bool:
+        """class method to determine if a given list can be parsed into an event"""
+
+    @classmethod
+    @abstractmethod
+    def parse(cls, tokens):
+        """class method to parse a list in an event type"""
+
+    @classmethod
+    def isfloat(cls, text):
+        try:
+            float(text)
+            return True
+        except ValueError:
+            return False
+
+
+@dataclass
+class HeartBeat(Event):
+
+    @classmethod
+    def _can_parse(cls, cols: List) -> bool:
         if len(cols) != 1:
             return False
         criteria = [
@@ -29,8 +59,7 @@ class HeartBeat:
 
 
 @dataclass
-class Bid:
-    timestamp: int
+class Bid(Event):
     user_id: str
     item: str
     bid_amount: float
@@ -45,7 +74,7 @@ class Bid:
             cols[user_id].isdigit(),
             cols[action] == 'BID',
             cols[item].isidentifier(),
-            isfloat(cols[bid_amount])
+            cls.isfloat(cols[bid_amount])
         ]
         return all(criteria)
 
@@ -62,8 +91,7 @@ class Bid:
 
 
 @dataclass
-class Listing:
-    timestamp: int
+class Listing(Event):
     user_id: str
     item: str
     reserve_price: float
@@ -79,7 +107,7 @@ class Listing:
             cols[user_id].isdigit(),
             cols[action] == 'SELL',
             cols[item].isidentifier(),
-            isfloat(cols[reserve_price]),
+            cls.isfloat(cols[reserve_price]),
             cols[end_time].isdigit()
         ]
         return all(criteria)
@@ -95,17 +123,3 @@ class Listing:
                 reserve_price=float(cols[reserve_price]),
                 end_time=int(cols[end_time])
             )
-
-
-def infer_event(cols):
-    heartbeat = HeartBeat.parse(cols)
-    if heartbeat is not None:
-        return HeartBeat(timestamp=int(cols[0]))
-
-    listing = Listing.parse(cols)
-    if listing is not None:
-        return listing
-
-    bid = Bid.parse(cols)
-    if bid is not None:
-        return bid

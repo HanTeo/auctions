@@ -10,6 +10,7 @@ class Auction:
     end_time: int
     reserve_price: float
     bids: List
+
     winner: str = ''
     outcome: str = 'UNSOLD'
     price_paid: float = 0.0
