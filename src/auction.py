@@ -1,7 +1,7 @@
 import heapq
 from dataclasses import dataclass
 from typing import List
-from src.events import Bid, HeartBeat
+from events import Bid, HeartBeat
 
 
 @dataclass

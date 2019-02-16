@@ -36,6 +36,17 @@ def test_given_from_file(capsys):
     ]
 
 
+def test_given_from_file(capsys):
+    main('does_not_exists.txt')
+
+    out, err = get_stdout(capsys)
+
+    assert not any(out)
+    assert err == [
+        'does_not_exists.txt does not exist'
+    ]
+
+
 def test_no_bids():
     raw_events = [
         '10|1|SELL|toaster_1|10.00|20',

@@ -1,12 +1,12 @@
+import sys
 from typing import List, Generator
-from src.events import HeartBeat, Bid, Listing, Event
-from src.auction import Auction
+from events import HeartBeat, Bid, Listing, Event
+from auction import Auction
 import argparse
 import os
 
 
 def process(raw_events: List) -> Generator:
-
     auctions = {}
     errors = []
 
@@ -46,8 +46,8 @@ def process(raw_events: List) -> Generator:
 
 def main(path):
     if not os.path.exists(path):
-        print(f'{path} does not exist')
-        pass
+        print(f'{path} does not exist', file=sys.stderr)
+        return
 
     with open(path) as file:
         raw_events = [r.rstrip('\n') for r in file.readlines()]
