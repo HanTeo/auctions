@@ -17,7 +17,7 @@ class Auction:
     max_bid_amount: float = None
     min_bid_amount: float = None
 
-    def isvalid(self, bid: Bid):
+    def isvalid(self, bid: Bid) -> bool:
         criteria = [
             bid.timestamp <= self.end_time,
             bid.bid_amount > self.best_bid_amount

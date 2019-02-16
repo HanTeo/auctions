@@ -11,6 +11,7 @@ def process(raw_events: List):
     for r in raw_events:
         tokenize = r.split('|')
         event = infer_event(tokenize)
+
         if event is None:
             errors.append({'error': r})
 
